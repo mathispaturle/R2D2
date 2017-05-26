@@ -28,8 +28,8 @@
     //servoMotor.attach(6);
 
     //pinMode(SPEAKER_PIN, OUTPUT);  
-    pinMode(PIN_LED_BLUE, INPUT);  
-    //pinMode(PIN_LED_RED, INPUT);  
+    pinMode(PIN_LED_BLUE, OUTPUT);  
+    pinMode(PIN_LED_RED, OUTPUT);  
  //servoMotor.write(180);
     
   }
@@ -39,10 +39,10 @@
     //int currentTime = millis();
     //Serial.println(currentTime);
 
-    digitalWrite(PIN_LED_BLUE, HIGH);}
-       /*digitalWrite(PIN_LED_RED, HIGH);
+    digitalWrite(PIN_LED_BLUE, HIGH);
+    digitalWrite(PIN_LED_RED, HIGH);}
        
-       // Desplazamos a la posición 0º
+      /* // Desplazamos a la posición 0º
      
       // Esperamos 1 segundo
       delay(1000);
