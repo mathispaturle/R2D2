@@ -25,25 +25,25 @@
     Serial.begin(9600);
    
     // Iniciamos el servo para que empiece a trabajar con el pin 6
-    servoMotor.attach(6);
+    //servoMotor.attach(6);
 
-    pinMode(SPEAKER_PIN, OUTPUT);  
+    //pinMode(SPEAKER_PIN, OUTPUT);  
     pinMode(PIN_LED_BLUE, INPUT);  
-    pinMode(PIN_LED_RED, INPUT);  
-
+    //pinMode(PIN_LED_RED, INPUT);  
+ //servoMotor.write(180);
     
   }
   
   void loop() {
     // put your main code here, to run repeatedly:
-    int currentTime = millis();
-    Serial.println(currentTime);
+    //int currentTime = millis();
+    //Serial.println(currentTime);
 
-       digitalWrite(PIN_LED_BLUE, HIGH);
-       digitalWrite(PIN_LED_RED, HIGH);
+    digitalWrite(PIN_LED_BLUE, HIGH);}
+       /*digitalWrite(PIN_LED_RED, HIGH);
        
        // Desplazamos a la posición 0º
-      servoMotor.write(0);
+     
       // Esperamos 1 segundo
       delay(1000);
       
@@ -98,7 +98,7 @@
       }
 
       
-  }
+  }*/
 
 
 
@@ -111,7 +111,7 @@
   //                                                                                                         //
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
       
-       
+  
   void beep (int SPEAKER_PIN, float noteFrequency, long noteDuration)
   {    
     int x;
