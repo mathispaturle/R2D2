@@ -15,19 +15,26 @@
   #define MOTOR_PIN_3 8
   #define MOTOR_PIN_4 7
 
-
+  //POTENTIOMETER
+  #define PIN_POTENTIOMETER A1
 
   // OTHER CONSTANTS
   #define INTERVAL 500
+  #define MIN_VALUE 0
+  #define MAX_VALUE 1023
+  #define TARGET_MIN_VALUE 0
+  #define TARGET_MAX_VALUE 255
+  
 
   //CONSTATANTS
   #define MAX_RPM 255
-  #define FIRST_DISTANCE 20
-  #define SECOND_DISTANCE 30
+  #define FIRST_DISTANCE 30
+
 
 
   // VARIABLES
-  int vel;
+  int potentiometer;
+  int speedMotors;
   long previousMillis = 0;
   
   void setup() {
@@ -41,12 +48,19 @@
      pinMode(MOTOR_PIN_3, OUTPUT);
      pinMode(MOTOR_PIN_4, OUTPUT);
 
+     pinMode (PIN_POTENTIOMETER, INPUT);
+
   }
    
   void loop() {
 
      long timeMillis = millis();
 
+     potentiometer = analogRead(PIN_POTENTIOMETER);
+     speedMotors = map(potentiometer, MIN_VALUE, MAX_VALUE, TARGET_MIN_VALUE, TARGET_MAX_VALUE);
+
+     Serial.println(speedMotors);
+     
      if (timeMillis - previousMillis > INTERVAL){
        ping(TRIGGER_PIN, ECHO_PIN);
        previousMillis = timeMillis;
@@ -65,8 +79,6 @@
    * ADDITIONAL FUNCTIONS
    * 
    */
-  
-  
    
   void Alante(int vel)
   {
@@ -116,26 +128,16 @@
   
   
      // CHECK THE DISTANCES
-     /*if(distanceCm <= FIRST_DISTANCE) {
-      Alante(MAX_RPM);
-      Alante2(MAX_RPM);  
-     }*/
-
-      if (distanceCm <= FIRST_DISTANCE) {
-      Atras(MAX_RPM);
-      Alante2(MAX_RPM);
-     }
-     
+     if (distanceCm <= FIRST_DISTANCE) {
+      Atras(speedMotors);
+      Alante2(speedMotors);
+     } 
      else {
-      Atras(MAX_RPM);
-      Atras2(MAX_RPM);
+      Atras(speedMotors);
+      Atras2(speedMotors);
      }
-    
-  
      
      return distanceCm;
-     
-  
      
   }
 
