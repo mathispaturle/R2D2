@@ -19,7 +19,7 @@
   
   //LED PINS
   #define PIN_LED_BLUE 9
-  #define PIN_LED_RED 2
+  #define PIN_LED_RED 8
 
   //SERVO PIN
   #define PIN_SERVO 6
@@ -37,7 +37,8 @@
   int incomingByte = 0;
   int redLedState, blueLedState;
   int systemState = 0;
-
+  int counter = 0;
+  boolean firstTime = false;
 
   //OBJECTS
   // Declaramos la variable para controlar el servo
@@ -50,34 +51,19 @@
     pinMode(RX, INPUT);
     pinMode(TX, OUTPUT);
     
-    //servoMotor.attach(PIN_SERVO);
+    servoMotor.attach(PIN_SERVO);
 
-    //pinMode(SPEAKER_PIN, OUTPUT);  
+    pinMode(SPEAKER_PIN, OUTPUT);  
     pinMode(PIN_LED_BLUE, OUTPUT);  
     pinMode(PIN_LED_RED, OUTPUT);  
     pinMode(PIN_BUTTON, INPUT);
 
     redLedState = LOW;
     blueLedState = LOW;
-    
+    servoMotor.write(180);
   }
   
   void loop() {
-    // put your main code here, to run repeatedly:
-    //int currentTime = millis();
-    //Serial.println(currentTime);
-    
-    /*systemState = digitalRead(PIN_BUTTON);
-    if (systemState == HIGH){
-      
-      Serial.println(0);
-    }
-    else {
-
-      Serial.println(1);
-    }
-    */
-    
     
     if (Serial.available() > NULL_VALUE) {
         // read the incoming byte:
@@ -86,14 +72,32 @@
         // say what you got:
         if (incomingByte == ASCII_0){
           redLedState = LOW;
+          servoMotor.write(180);
+          firstTime = true;
+         
         }
         else if (incomingByte == ASCII_1){
           redLedState = HIGH;
+          servoMotor.write(counter);
+          counter+=2;
+
+          if (counter >= 180){
+
+            counter = 0;
+          }
+
+          if (firstTime){
+            //r2D2 song to play::
+            uhoh();
+            
+            firstTime = false;
+           }
         }
         else{
           redLedState = LOW;
+          
         }
-        
+        //servoMotor.write(180);
         blueLedState = HIGH;
         
         //Serial1.print("I received: ");
@@ -102,129 +106,12 @@
     
     digitalWrite(PIN_LED_BLUE, blueLedState);
     digitalWrite(PIN_LED_RED, redLedState); 
-    
+
+
+      //delay(1000);
+      
+      
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-  //                                                                                                         //
-  //                                                                                                         //    
-  //                                         R2-D2 AUDIO ACTIONS                                             //
-  //                                                                                                         //
-  //                                                                                                         //
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-       
-      /* // Desplazamos a la posición 0º
-     
-      // Esperamos 1 segundo
-      delay(1000);
-      
-      // Desplazamos a la posición 90º
-      servoMotor.write(90);
-      // Esperamos 1 segundo
-      delay(1000);
-      
-      // Desplazamos a la posición 180º
-      servoMotor.write(180);
-      // Esperamos 1 segundo
-
-      
-      delay(1000);
-      squeak();
-      delay(500);
-      catcall();
-      delay(500);
-      ohhh();
-      delay(500);
-      laugh();
-      delay(500);
-//      closeEncounters();
-//      delay(500);
-//      laugh2();
-//      delay(500);
-//      //waka();
-//      //delay(500);  
-//      r2D2();
-//      delay(500);
-//      ariel();
-//      delay(3000);
-
-
-      // Vamos a tener dos bucles uno para mover en sentido positivo y otro en sentido negativo
-      // Para el sentido positivo
-      for (int i = 0; i <= 180; i+=2)
-      {
-        // Desplazamos al ángulo correspondiente
-        servoMotor.write(i);
-        // Hacemos una pausa de 25ms
-        delay(25);
-      }
-     
-      // Para el sentido negativo
-      for (int i = 179; i > 0; i-=2)
-      {
-        // Desplazamos al ángulo correspondiente
-        servoMotor.write(i);
-        // Hacemos una pausa de 25ms
-        delay(25);
-      }
-
-      
-  }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -277,105 +164,9 @@
             } 
   }     
        
-  void scale() 
-  {    
-            beep(SPEAKER_PIN, note_C7,500); //C: play the note C for 500ms 
-            beep(SPEAKER_PIN, note_D7,500); //D 
-            beep(SPEAKER_PIN, note_E7,500); //E 
-            beep(SPEAKER_PIN, note_F7,500); //F 
-            beep(SPEAKER_PIN, note_G7,500); //G 
-            beep(SPEAKER_PIN, note_A7,500); //A 
-            beep(SPEAKER_PIN, note_B7,500); //B 
-            beep(SPEAKER_PIN, note_C8,500); //C 
-  }  
-  
-  void r2D2(){
-            beep(SPEAKER_PIN, note_A7,100); //A 
-            beep(SPEAKER_PIN, note_G7,100); //G 
-            beep(SPEAKER_PIN, note_E7,100); //E 
-            beep(SPEAKER_PIN, note_C7,100); //C
-            beep(SPEAKER_PIN, note_D7,100); //D 
-            beep(SPEAKER_PIN, note_B7,100); //B 
-            beep(SPEAKER_PIN, note_F7,100); //F 
-            beep(SPEAKER_PIN, note_C8,100); //C 
-            beep(SPEAKER_PIN, note_A7,100); //A 
-            beep(SPEAKER_PIN, note_G7,100); //G 
-            beep(SPEAKER_PIN, note_E7,100); //E 
-            beep(SPEAKER_PIN, note_C7,100); //C
-            beep(SPEAKER_PIN, note_D7,100); //D 
-            beep(SPEAKER_PIN, note_B7,100); //B 
-            beep(SPEAKER_PIN, note_F7,100); //F 
-            beep(SPEAKER_PIN, note_C8,100); //C 
-  }
-  
-  void closeEncounters() {
-            beep(SPEAKER_PIN, note_Bb5,300); //B b
-            delay(50);
-            beep(SPEAKER_PIN, note_C6,300); //C
-            delay(50);
-            beep(SPEAKER_PIN, note_Ab5,300); //A b
-            delay(50);
-            beep(SPEAKER_PIN, note_Ab4,300); //A b
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb5,500); //E b   
-            delay(500);     
-            
-            beep(SPEAKER_PIN, note_Bb4,300); //B b
-            delay(100);
-            beep(SPEAKER_PIN, note_C5,300); //C
-            delay(100);
-            beep(SPEAKER_PIN, note_Ab4,300); //A b
-            delay(100);
-            beep(SPEAKER_PIN, note_Ab3,300); //A b
-            delay(100);
-            beep(SPEAKER_PIN, note_Eb4,500); //E b   
-            delay(500);  
-            
-            beep(SPEAKER_PIN, note_Bb3,300); //B b
-            delay(200);
-            beep(SPEAKER_PIN, note_C4,300); //C
-            delay(200);
-            beep(SPEAKER_PIN, note_Ab3,300); //A b
-            delay(500);
-            beep(SPEAKER_PIN, note_Ab2,300); //A b
-            delay(550);
-            beep(SPEAKER_PIN, note_Eb3,500); //E b      
-  }
-  
-  void ariel() {
-  
-            beep(SPEAKER_PIN, note_C6,300); //C
-            delay(50);
-            beep(SPEAKER_PIN, note_D6,300); //D
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb6,600); //D#
-            delay(250);
-            
-            beep(SPEAKER_PIN, note_D6,300); //D
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb6,300); //D#
-            delay(50);
-            beep(SPEAKER_PIN, note_F6,600); //F
-            delay(250);
-            
-            beep(SPEAKER_PIN, note_C6,300); //C
-            delay(50);
-            beep(SPEAKER_PIN, note_D6,300); //D
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb6,500); //D#
-            delay(50);          
-            beep(SPEAKER_PIN, note_D6,300); //D
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb6,300); //D#
-            delay(50);             
-            beep(SPEAKER_PIN, note_D6,300); //D
-            delay(50);
-            beep(SPEAKER_PIN, note_Eb6,300); //D#
-            delay(50);
-            beep(SPEAKER_PIN, note_F6,600); //F
-            delay(50); 
-  
-  }
+ 
+
+ 
    
   
   void laugh2() {
@@ -384,25 +175,25 @@
             beep(SPEAKER_PIN, note_G6,200); //G 
             beep(SPEAKER_PIN, note_C7,200); //C 
             beep(SPEAKER_PIN, note_C6,200); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,200); //C
             beep(SPEAKER_PIN, note_E6,200); //E  
             beep(SPEAKER_PIN, note_G6,200); //G 
             beep(SPEAKER_PIN, note_C7,200); //C 
             beep(SPEAKER_PIN, note_C6,200); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
-            delay(50);
+            
             beep(SPEAKER_PIN, note_C6,50); //C
             
   
@@ -413,7 +204,7 @@
     for (int i=100; i<5000; i=i*1.45) {
       beep(SPEAKER_PIN,i,60);
     }
-    delay(10);
+    
     for (int i=100; i<6000; i=i*1.5) {
       beep(SPEAKER_PIN,i,20);
     }
@@ -423,28 +214,28 @@
     for (int i=1000; i<3000; i=i*1.05) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(100);
+    
     for (int i=2000; i>1000; i=i*.95) {
       beep(SPEAKER_PIN,i,10);
     }
       for (int i=1000; i<3000; i=i*1.05) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(100);
+    
     for (int i=2000; i>1000; i=i*.95) {
       beep(SPEAKER_PIN,i,10);
     }
       for (int i=1000; i<3000; i=i*1.05) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(100);
+    
     for (int i=2000; i>1000; i=i*.95) {
       beep(SPEAKER_PIN,i,10);
     }
       for (int i=1000; i<3000; i=i*1.05) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(100);
+    
     for (int i=2000; i>1000; i=i*.95) {
       beep(SPEAKER_PIN,i,10);
     }
@@ -454,7 +245,7 @@
     for (int i=1000; i<5000; i=i*1.05) {
       beep(SPEAKER_PIN,i,10);
     }
-   delay(300);
+   
    
     for (int i=1000; i<3000; i=i*1.03) {
       beep(SPEAKER_PIN,i,10);
@@ -477,7 +268,7 @@
     for (int i=1000; i<1244; i=i*1.01) {
       beep(SPEAKER_PIN,i,30);
     }
-    delay(200);
+    
     for (int i=1244; i>1108; i=i*.99) {
       beep(SPEAKER_PIN,i,30);
     }
@@ -487,33 +278,33 @@
     for (int i=1000; i<2000; i=i*1.10) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
     for (int i=1000; i>500; i=i*.90) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
     for (int i=1000; i<2000; i=i*1.10) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
     for (int i=1000; i>500; i=i*.90) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
       for (int i=1000; i<2000; i=i*1.10) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
     for (int i=1000; i>500; i=i*.90) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
       for (int i=1000; i<2000; i=i*1.10) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
     for (int i=1000; i>500; i=i*.90) {
       beep(SPEAKER_PIN,i,10);
     }
-    delay(50);
+    
   }
