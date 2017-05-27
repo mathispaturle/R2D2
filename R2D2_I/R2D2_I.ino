@@ -5,6 +5,10 @@
    * 
    */
   
+  //COMMUNICATION PINS
+  #define RX 0
+  #define TX 1
+  
   // CHIP CONTROL DE DIRECCION
   #define ECHO_PIN 2
   #define TRIGGER_PIN 4
@@ -24,6 +28,9 @@
   #define MAX_VALUE 1023
   #define TARGET_MIN_VALUE 0
   #define TARGET_MAX_VALUE 255
+  #define NO_OBSATCLE 0
+  #define OBSATCLE 1
+  #define NULL_VALUE 0  
   
 
   //CONSTATANTS
@@ -31,25 +38,29 @@
   #define FIRST_DISTANCE 30
 
 
-
   // VARIABLES
   int potentiometer;
   int speedMotors;
   long previousMillis = 0;
+  int currentDistance;
+  bool obstacle;
+  int sendValue;
   
   void setup() {
      Serial.begin(9600);
+
+     pinMode(RX, OUTPUT);
+     pinMode(TX, INPUT);
      
      pinMode(TRIGGER_PIN, OUTPUT);
      pinMode(ECHO_PIN, INPUT);
-  
      pinMode(MOTOR_PIN_1, OUTPUT);
      pinMode(MOTOR_PIN_2, OUTPUT);
      pinMode(MOTOR_PIN_3, OUTPUT);
      pinMode(MOTOR_PIN_4, OUTPUT);
-
      pinMode (PIN_POTENTIOMETER, INPUT);
 
+     obstacle = false;
   }
    
   void loop() {
@@ -59,14 +70,39 @@
      potentiometer = analogRead(PIN_POTENTIOMETER);
      speedMotors = map(potentiometer, MIN_VALUE, MAX_VALUE, TARGET_MIN_VALUE, TARGET_MAX_VALUE);
 
-     Serial.println(speedMotors);
      
      if (timeMillis - previousMillis > INTERVAL){
-       ping(TRIGGER_PIN, ECHO_PIN);
+       currentDistance = ping(TRIGGER_PIN, ECHO_PIN);
        previousMillis = timeMillis;
      }
 
+     // CHECK THE DISTANCES
+     if (currentDistance <= FIRST_DISTANCE) {
+      obstacle = true;
+      Atras(speedMotors);
+      Alante2(speedMotors);
+     } 
+     
+     else {
+      obstacle = false;
+      Atras(speedMotors);
+      Atras2(speedMotors);
+     }
 
+     //Send info to other Arduino
+     if (obstacle){
+      sendValue= 1;
+     } else if (!obstacle){
+      sendValue = 0;
+     }else{
+      sendValue = 1;
+     }
+
+    
+    //if (Serial.available() > NULL_VALUE) {
+       Serial.println(sendValue);
+       //elay(100);
+    //}
      
   }
   
@@ -76,7 +112,7 @@
   
   /*
    * 
-   * ADDITIONAL FUNCTIONS
+   * ADDITIONAL MOVEMENT FUNCTIONS
    * 
    */
    
@@ -111,7 +147,14 @@
     digitalWrite(MOTOR_PIN_4, LOW);
   }
   
-  
+
+
+  /*
+   * 
+   * ADDITIONAL DISTANCE FUNCTION
+   * 
+   */
+
   int ping(int TriggerPin, int EchoPin) {
     
      long duration, distanceCm;
@@ -125,17 +168,6 @@
      duration = pulseIn(EchoPin, HIGH);           //medimos el tiempo entre pulsos, en microsegundos
      
      distanceCm = duration * 10 / 292/ 2;         //convertimos a distancia, en cm
-  
-  
-     // CHECK THE DISTANCES
-     if (distanceCm <= FIRST_DISTANCE) {
-      Atras(speedMotors);
-      Alante2(speedMotors);
-     } 
-     else {
-      Atras(speedMotors);
-      Atras2(speedMotors);
-     }
      
      return distanceCm;
      

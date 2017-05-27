@@ -8,29 +8,59 @@
  * 
  * 
  */
-  
+
+  //LIBRARIES
   #include "musical_notes.h"
   #include <Servo.h>
-  #define PIN_LED_BLUE 2
-  #define PIN_LED_RED 9
+
+  //COMMUNICATION PINS
+  #define RX 1
+  #define TX 0
   
+  //LED PINS
+  #define PIN_LED_BLUE 9
+  #define PIN_LED_RED 2
+
+  //SERVO PIN
+  #define PIN_SERVO 6
+
+  //BUTTON PIN
+  #define PIN_BUTTON 3
+  
+  //CONSTANTS
+  #define ASCII_0 48
+  #define ASCII_1 49
+  #define NULL_VALUE 0
+  
+  // VARIABLES
   int SPEAKER_PIN = 5;
+  int incomingByte = 0;
+  int redLedState, blueLedState;
+  int systemState = 0;
+
   
+  //OBJECTS
   // Declaramos la variable para controlar el servo
   Servo servoMotor;
+
+
   
   void setup() {
-    // put your setup code here, to run once:
-    // Iniciamos el monitor serie para mostrar el resultado
+    
     Serial.begin(9600);
-   
-    // Iniciamos el servo para que empiece a trabajar con el pin 6
-    //servoMotor.attach(6);
+
+    pinMode(RX, INPUT);
+    pinMode(TX, OUTPUT);
+    
+    //servoMotor.attach(PIN_SERVO);
 
     //pinMode(SPEAKER_PIN, OUTPUT);  
     pinMode(PIN_LED_BLUE, OUTPUT);  
     pinMode(PIN_LED_RED, OUTPUT);  
- //servoMotor.write(180);
+    pinMode(PIN_BUTTON, INPUT);
+
+    redLedState = LOW;
+    blueLedState = LOW;
     
   }
   
@@ -38,9 +68,83 @@
     // put your main code here, to run repeatedly:
     //int currentTime = millis();
     //Serial.println(currentTime);
+    
 
-    digitalWrite(PIN_LED_BLUE, HIGH);
-    digitalWrite(PIN_LED_RED, HIGH);}
+    
+    if (Serial.available() > NULL_VALUE) {
+        // read the incoming byte:
+        incomingByte = Serial.read();
+
+        // say what you got:
+        if (incomingByte == ASCII_0){
+          redLedState = LOW;
+        }
+        else if (incomingByte == ASCII_1){
+          redLedState = HIGH;
+        }
+        else{
+          redLedState = LOW;
+        }
+        
+        blueLedState = HIGH;
+        
+        //Serial1.print("I received: ");
+        //Serial1.println(incomingByte, DEC);
+    }
+    
+    digitalWrite(PIN_LED_BLUE, blueLedState);
+    digitalWrite(PIN_LED_RED, redLedState); 
+    
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+  //                                                                                                         //
+  //                                                                                                         //    
+  //                                         R2-D2 AUDIO ACTIONS                                             //
+  //                                                                                                         //
+  //                                                                                                         //
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
        
       /* // Desplazamos a la posición 0º
      
@@ -99,6 +203,37 @@
 
       
   }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
