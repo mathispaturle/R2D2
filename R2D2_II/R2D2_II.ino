@@ -38,13 +38,11 @@
   int redLedState, blueLedState;
   int systemState = 0;
 
-  
+
   //OBJECTS
   // Declaramos la variable para controlar el servo
   Servo servoMotor;
 
-
-  
   void setup() {
     
     Serial.begin(9600);
@@ -69,7 +67,17 @@
     //int currentTime = millis();
     //Serial.println(currentTime);
     
+    systemState = digitalRead(PIN_BUTTON);
+    if (systemState == HIGH){
+      
+      Serial.println(0);
+    }
+    else {
 
+      Serial.println(1);
+    }
+    
+    
     
     if (Serial.available() > NULL_VALUE) {
         // read the incoming byte:
