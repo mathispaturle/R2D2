@@ -67,7 +67,7 @@
     //int currentTime = millis();
     //Serial.println(currentTime);
     
-    systemState = digitalRead(PIN_BUTTON);
+    /*systemState = digitalRead(PIN_BUTTON);
     if (systemState == HIGH){
       
       Serial.println(0);
@@ -76,7 +76,7 @@
 
       Serial.println(1);
     }
-    
+    */
     
     
     if (Serial.available() > NULL_VALUE) {
